@@ -4,7 +4,7 @@ import Script from "next/script";
 import { LanguageProvider } from "@/components/i18n";
 import "./globals.css";
 
-const GA_ID = "G-F4R5KXB6PQ";
+const GA_ID = "G-DEGDNSM10E";
 
 const quicksand = Quicksand({
   variable: "--font-quicksand",
