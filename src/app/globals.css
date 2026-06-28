@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+/*
+  Pretty Petal — colours pulled straight from the logo.
+  Sage green is the logo's background (#696E5A); cream is its lettering.
+  Blush is the girly accent that ties the whole thing together.
+*/
+:root {
+  --sage: #696e5a; /* logo background — heroes blend into it */
+  --sage-deep: #545948;
+  --sage-text: #474d39; /* body copy on cream */
+  --cream: #f2e8cd; /* logo lettering */
+  --cream-soft: #f7efd9;
+  --cream-bg: #faf6ec; /* page background */
+  --card: #fffdf7;
+  --blush: #e7abb2;
+  --blush-soft: #f8e2e5;
+  --blush-deep: #cd8c93;
+  --line: #ece4d2;
+}
+
+@theme inline {
+  --color-sage: var(--sage);
+  --color-sage-deep: var(--sage-deep);
+  --color-sage-text: var(--sage-text);
+  --color-cream: var(--cream);
+  --color-cream-soft: var(--cream-soft);
+  --color-cream-bg: var(--cream-bg);
+  --color-card: var(--card);
+  --color-blush: var(--blush);
+  --color-blush-soft: var(--blush-soft);
+  --color-blush-deep: var(--blush-deep);
+  --color-line: var(--line);
+  --font-sans: var(--font-quicksand);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream-bg);
+  color: var(--sage-text);
+  font-family: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/*
+  The whole site uses exactly two type sizes — one for headings, one for
+  body — so everything stays calm and cohesive. Hierarchy comes from
+  weight, colour, motion and spacing instead of a dozen font sizes.
+*/
+.t-heading {
+  font-size: 1.6rem;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.t-body {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  font-weight: 400;
+}
+
+.brand {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+::selection {
+  background: var(--blush-soft);
+  color: var(--sage-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--blush-deep);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ================================================================== */
+/*  Motion — soft, slow and elegant. Cute, never jumpy.                */
+/* ================================================================== */
+
+/* candle-flame flicker */
+@keyframes pp-flicker {
+  0%, 100% { transform: scale(1) rotate(-1deg); opacity: 1; }
+  25% { transform: scale(1.06, 0.96) rotate(1.5deg); opacity: 0.92; }
+  50% { transform: scale(0.97, 1.05) rotate(-1.5deg); opacity: 1; }
+  75% { transform: scale(1.04, 0.98) rotate(1deg); opacity: 0.95; }
+}
+.anim-flicker {
+  animation: pp-flicker 3.4s ease-in-out infinite;
+  transform-origin: 50% 85%;
+}
+
+/* gentle up–down float */
+@keyframes pp-floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.anim-floaty { animation: pp-floaty 6s ease-in-out infinite; }
+.anim-floaty-slow { animation: pp-floaty 9s ease-in-out infinite; }
+
+/* slow drifting gradient for the sage panels */
+@keyframes pp-drift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.anim-drift {
+  background-size: 200% 200%;
+  animation: pp-drift 20s ease-in-out infinite;
+}
+
+/* breathing glow behind the logo */
+@keyframes pp-glow {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.08); }
+}
+.anim-glow { animation: pp-glow 5s ease-in-out infinite; }
+
+/* drifting petals */
+@keyframes pp-petal {
+  0% { transform: translate(0, -10vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.9; }
+  90% { opacity: 0.9; }
+  100% { transform: translate(var(--sway, 40px), 110vh) rotate(320deg); opacity: 0; }
+}
+.anim-petal { animation: pp-petal var(--dur, 14s) linear infinite; }
+
+/* twinkling sparkle */
+@keyframes pp-sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.4); }
+  50% { opacity: 1; transform: scale(1); }
+}
+.anim-sparkle { animation: pp-sparkle 2.8s ease-in-out infinite; }
+
+/* bobbing scroll cue */
+@keyframes pp-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.65; }
+  50% { transform: translateY(7px); opacity: 1; }
+}
+.anim-bob { animation: pp-bob 1.8s ease-in-out infinite; }
+
+/* marquee ribbon */
+@keyframes pp-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: pp-marquee 28s linear infinite;
+}
+
+/* on-load fade up (staggered via inline delay) */
+@keyframes pp-fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-rise {
+  opacity: 0;
+  animation: pp-fade-up 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+/* shine sweep on hover */
+.shine { position: relative; overflow: hidden; }
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 70%
+  );
+  transform: translateX(-130%);
+  transition: transform 0.7s ease;
+}
+.shine:hover::after { transform: translateX(130%); }
+
+/* scroll-reveal — toggled by the Reveal component */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px) scale(0.985);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: opacity, transform;
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Be kind to people who prefer less motion. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .anim-flicker, .anim-floaty, .anim-floaty-slow, .anim-drift, .anim-glow,
+  .anim-petal, .anim-sparkle, .anim-bob, .marquee-track, .anim-rise {
+    animation: none !important;
+  }
+  .anim-rise { opacity: 1; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .shine::after { display: none; }
+}
