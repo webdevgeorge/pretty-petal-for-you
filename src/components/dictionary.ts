@@ -20,7 +20,26 @@ export type Copy = {
   };
   collection: { heading: string; sub: string; notForSale: string; gallery: GalleryCopy[] };
   features: { heading: string; items: { title: string; note: string }[] };
-  contact: { heading: string; sub: string; instagram: string; facebook: string };
+  contact: {
+    heading: string;
+    sub: string;
+    instagram: string;
+    facebook: string;
+    form: {
+      name: string;
+      email: string;
+      phone: string;
+      note: string;
+      send: string;
+      sending: string;
+      success: string;
+      or: string;
+      errFields: string;
+      errEmail: string;
+      errServer: string;
+      errConfig: string;
+    };
+  };
   footer: { story: string; collection: string; journal: string; hello: string; tagline: string };
   nav: { collection: string; journal: string };
   blog: {
@@ -90,6 +109,20 @@ export const dict: Record<Lang, Copy> = {
       sub: "Je partage chaque nouvelle bougie d'abord sur Instagram. Venez me suivre, dites-moi bonjour, ou écrivez-moi si vous rêvez un jour d'une pièce rien que pour vous — ça me ferait vraiment plaisir d'avoir de vos nouvelles.",
       instagram: "Suivez-moi sur Instagram",
       facebook: "Retrouvez-moi sur Facebook",
+      form: {
+        name: "Nom",
+        email: "Email",
+        phone: "Téléphone",
+        note: "Message (facultatif)",
+        send: "Envoyer",
+        sending: "Envoi…",
+        success: "Merci ! Je vous recontacte très vite. 🌸",
+        or: "ou retrouvez-moi ici",
+        errFields: "Merci d'indiquer votre nom, votre email et votre téléphone.",
+        errEmail: "Cet email semble incorrect.",
+        errServer: "Une erreur est survenue — réessayez.",
+        errConfig: "Le formulaire n'est pas encore prêt — écrivez-moi sur Instagram pour le moment.",
+      },
     },
     footer: { story: "Histoire", collection: "Collection", journal: "Journal", hello: "Coucou", tagline: "Faites à la main avec amour" },
     nav: { collection: "Collection", journal: "Journal" },
@@ -157,6 +190,20 @@ export const dict: Record<Lang, Copy> = {
       sub: "I share every new candle on Instagram first. Come follow along, say hi, or send me a message if you'd ever like something made just for you — I'd really love to hear from you.",
       instagram: "Follow me on Instagram",
       facebook: "Find me on Facebook",
+      form: {
+        name: "Name",
+        email: "Email",
+        phone: "Phone",
+        note: "Message (optional)",
+        send: "Send",
+        sending: "Sending…",
+        success: "Thank you! I'll be in touch soon. 🌸",
+        or: "or find me here",
+        errFields: "Please fill in your name, email and phone.",
+        errEmail: "That email doesn't look right.",
+        errServer: "Something went wrong — please try again.",
+        errConfig: "The form isn't ready yet — message me on Instagram for now.",
+      },
     },
     footer: { story: "Story", collection: "Collection", journal: "Journal", hello: "Hello", tagline: "Handmade with love" },
     nav: { collection: "Collection", journal: "Journal" },

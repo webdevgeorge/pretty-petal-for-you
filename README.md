@@ -10,6 +10,11 @@ small batches by Liza, with a lot of love.
 A bilingual (English / French) brand site featuring an animated hero, a product
 gallery, a "meet the maker" story, and an SEO-optimised candle-care blog.
 
+It also has a private **admin panel** at [`/admin`](https://pretty-petal-for-you.vercel.app/admin)
+— form submissions, QR codes with full scan tracking, and analytics — backed by
+**Supabase**. The site runs fine without it; to enable the admin, follow
+[`SETUP.md`](SETUP.md).
+
 ## Tech stack
 
 - **Next.js 16** (App Router) + **React 19**

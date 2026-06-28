@@ -5,6 +5,7 @@ import { Reveal } from "@/components/Reveal";
 import { useLang } from "@/components/i18n";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ContactForm } from "@/components/ContactForm";
 
 import springBouquet from "@/media/spring-bouquet.png";
 import pinkWinter from "@/media/pink-winter.png";
@@ -385,12 +386,16 @@ export default function Home() {
             <Flourish tone="cream" />
             <h2 className="t-heading mt-6 text-cream">{t.contact.heading}</h2>
             <p className="mt-5 text-cream/85">{t.contact.sub}</p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+
+            <ContactForm />
+
+            <p className="mt-8 text-cream/60">{t.contact.form.or}</p>
+            <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href={INSTAGRAM}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="shine rounded-full bg-blush px-7 py-3 font-semibold text-sage-text transition-all duration-300 hover:-translate-y-0.5 hover:bg-blush-deep hover:text-white"
+                className="rounded-full border border-cream/40 px-6 py-2.5 font-medium text-cream transition-colors hover:bg-cream/10"
               >
                 {t.contact.instagram}
               </a>
@@ -398,7 +403,7 @@ export default function Home() {
                 href={FACEBOOK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-cream/40 px-7 py-3 font-medium text-cream transition-colors hover:bg-cream/10"
+                className="rounded-full border border-cream/40 px-6 py-2.5 font-medium text-cream transition-colors hover:bg-cream/10"
               >
                 {t.contact.facebook}
               </a>
