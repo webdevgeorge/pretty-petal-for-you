@@ -32,7 +32,7 @@ export async function generateMetadata({
       description: c.excerpt,
       type: "article",
       publishedTime: post.date,
-      authors: ["Lize"],
+      authors: ["Liza"],
       images: [{ url: post.image.src }],
     },
   };
@@ -60,7 +60,7 @@ export default async function ArticlePage({
       dateModified: post.date,
       inLanguage: "en",
       keywords: c.keyword,
-      author: { "@type": "Person", name: "Lize", url: INSTAGRAM },
+      author: { "@type": "Person", name: "Liza", url: INSTAGRAM },
       publisher: { "@type": "Organization", name: "Pretty Petal" },
       mainEntityOfPage: { "@type": "WebPage", "@id": `/blog/${slug}` },
     },

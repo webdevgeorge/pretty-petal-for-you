@@ -74,6 +74,15 @@ body {
   text-transform: uppercase;
 }
 
+/* Elegant cursive flourish — used only for the hero accent line. */
+.script-accent {
+  font-family: var(--font-script), "Segoe Script", cursive;
+  font-size: clamp(2.6rem, 1.8rem + 3.4vw, 3.6rem);
+  line-height: 1.05;
+  font-weight: 400;
+  padding-bottom: 0.08em; /* room for descenders */
+}
+
 ::selection {
   background: var(--blush-soft);
   color: var(--sage-text);

@@ -39,7 +39,7 @@ export function Article({ slug }: { slug: string }) {
         </p>
         <h1 className="t-heading mt-3 text-sage-text">{c.title}</h1>
         <p className="mt-3 text-sage-text/55">
-          {formatDate(post.date, lang)} · {post.readMins} {t.blog.minRead} · {t.blog.by} Lize
+          {formatDate(post.date, lang)} · {post.readMins} {t.blog.minRead} · {t.blog.by} Liza
         </p>
 
         <div className="mt-7 overflow-hidden rounded-3xl ring-1 ring-line/70 shadow-sm">
@@ -96,7 +96,7 @@ export function Article({ slug }: { slug: string }) {
             <Flame className="h-6 w-6 anim-flicker" />
           </span>
           <div>
-            <p className="font-semibold text-sage-text">{t.blog.by} Lize</p>
+            <p className="font-semibold text-sage-text">{t.blog.by} Liza</p>
             <p className="mt-1 text-sage-text/75">{t.blog.authorBio}</p>
           </div>
         </div>

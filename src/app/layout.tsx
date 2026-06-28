@@ -1,11 +1,21 @@
 import type { Metadata } from "next";
-import { Quicksand } from "next/font/google";
+import { Quicksand, Great_Vibes } from "next/font/google";
+import Script from "next/script";
 import { LanguageProvider } from "@/components/i18n";
 import "./globals.css";
+
+const GA_ID = "G-F4R5KXB6PQ";
 
 const quicksand = Quicksand({
   variable: "--font-quicksand",
   subsets: ["latin"],
+});
+
+// An elegant script used only for the hero flourish.
+const greatVibes = Great_Vibes({
+  variable: "--font-script",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -32,10 +42,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${quicksand.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${quicksand.variable} ${greatVibes.variable} h-full antialiased`}
+    >
       <body className="min-h-full">
         <LanguageProvider>{children}</LanguageProvider>
       </body>
+
+      {/* Google Analytics (gtag.js) */}
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="ga-gtag" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_ID}');
+        `}
+      </Script>
     </html>
   );
 }

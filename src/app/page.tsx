@@ -141,10 +141,13 @@ export default function Home() {
           </span>
 
           <h1
-            className="t-heading anim-rise mt-5 max-w-xl text-sage-text"
+            className="anim-rise mt-5 max-w-2xl text-balance"
             style={{ animationDelay: "0.1s" }}
           >
-            {t.hero.title}
+            <span className="t-heading block text-sage-text">{t.hero.title}</span>
+            <span className="script-accent mt-1 block text-blush-deep">
+              {t.hero.titleScript}
+            </span>
           </h1>
 
           <p

@@ -4,7 +4,7 @@ export type GalleryCopy = { tag: string; name: string; note: string; alt: string
 
 export type Copy = {
   sayHi: string;
-  hero: { title: string; sub: string; cta1: string; cta2: string; scroll: string };
+  hero: { title: string; titleScript: string; sub: string; cta1: string; cta2: string; scroll: string };
   marquee: string[];
   about: {
     kicker: string;
@@ -44,7 +44,8 @@ export const dict: Record<Lang, Copy> = {
   fr: {
     sayHi: "Coucou",
     hero: {
-      title: "Des bougies décoratives, coulées à la main avec beaucoup d'amour",
+      title: "Des bougies décoratives coulées à la main,",
+      titleScript: "avec beaucoup d'amour",
       sub: "De petites bougies en forme de fleurs, d'ours et de cœurs — chacune coulée à la main, à la maison, juste par amour.",
       cta1: "Voir la collection",
       cta2: "Faire connaissance",
@@ -53,15 +54,15 @@ export const dict: Record<Lang, Copy> = {
     marquee: ["Fait main", "Avec amour", "Faites par moi", "Une à la fois", "Coulée à la main"],
     about: {
       kicker: "La créatrice",
-      heading: "Bonjour, moi c'est Lize",
+      heading: "Bonjour, moi c'est Liza",
       p1: "Je n'avais jamais vraiment prévu de faire des bougies. Tout a commencé un hiver tranquille, avec un seul moule en silicone et une casserole de cire qui fondait sur la cuisinière — et quelque part entre le désordre et la magie, je suis complètement tombée amoureuse.",
       p2: "Chaque pièce que vous voyez ici est faite par moi, à la maison, en toute petite quantité. Je les coule lentement, je m'attarde sur chaque petit pétale, et je recommence dès qu'une bougie ne me semble pas tout à fait juste. Elles ne sont pas parfaites — et honnêtement, c'est ce que je préfère. Chacune est un peu différente, façonnée à la main et non par une machine.",
       p3: "Je les fais parce qu'elles font sourire les gens. Si l'une des miennes trouve un jour sa place sur votre étagère, ça me rendrait vraiment heureuse.",
       signoff: "À bientôt,",
-      signature: "Lize",
+      signature: "Liza",
       role: "Créatrice de Pretty Petal",
       photoCaption: "Une petite photo de moi arrive bientôt 🌸",
-      photoAlt: "Lize, la créatrice derrière Pretty Petal",
+      photoAlt: "Liza, la créatrice derrière Pretty Petal",
     },
     collection: {
       heading: "La petite collection",
@@ -103,14 +104,15 @@ export const dict: Record<Lang, Copy> = {
       moreReading: "À lire aussi",
       back: "Retour au journal",
       readArticle: "Lire l'article",
-      authorBio: "Lize est la créatrice de Pretty Petal. Elle coule chaque bougie à la main, à la maison, et partage ici ce qu'elle apprend en chemin.",
+      authorBio: "Liza est la créatrice de Pretty Petal. Elle coule chaque bougie à la main, à la maison, et partage ici ce qu'elle apprend en chemin.",
     },
   },
 
   en: {
     sayHi: "Say hi",
     hero: {
-      title: "Hand-poured decoration candles, made with a little love",
+      title: "Hand-poured decoration candles,",
+      titleScript: "made with a little love",
       sub: "Little candles shaped like flowers, bears and hearts — each one poured by hand at home, just for the love of it.",
       cta1: "See the collection",
       cta2: "Get to know me",
@@ -119,15 +121,15 @@ export const dict: Record<Lang, Copy> = {
     marquee: ["Handmade", "With love", "Made by me", "One at a time", "Poured by hand"],
     about: {
       kicker: "The maker",
-      heading: "Hi, I'm Lize",
+      heading: "Hi, I'm Liza",
       p1: "I never really planned to make candles. It started one quiet winter with a single silicone mould and a pot of wax melting on the stove — and somewhere between the mess and the magic, I completely fell for it.",
       p2: "Every piece you see here is made by me, at home, in tiny batches. I pour them slowly, fuss over every little petal, and start over whenever one doesn't feel quite right. They're not perfect — and honestly, that's my favourite part. Each one is a little different, shaped by hand and not by a machine.",
       p3: "I make them because they make people smile. If one of mine finds a home on your shelf one day, that would honestly mean the world to me.",
       signoff: "With love,",
-      signature: "Lize",
+      signature: "Liza",
       role: "Maker of Pretty Petal",
       photoCaption: "A little photo of me, coming soon 🌸",
-      photoAlt: "Lize, the maker behind Pretty Petal",
+      photoAlt: "Liza, the maker behind Pretty Petal",
     },
     collection: {
       heading: "The little collection",
@@ -169,7 +171,7 @@ export const dict: Record<Lang, Copy> = {
       moreReading: "Keep reading",
       back: "Back to the journal",
       readArticle: "Read the article",
-      authorBio: "Lize is the maker behind Pretty Petal. She pours every candle by hand at home, and shares what she learns along the way right here.",
+      authorBio: "Liza is the maker behind Pretty Petal. She pours every candle by hand at home, and shares what she learns along the way right here.",
     },
   },
 };
