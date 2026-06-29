@@ -21,12 +21,18 @@ export async function GET(
   const supabase = createAdminClient();
   const { data: qr } = await supabase
     .from("qr_codes")
-    .select("id, destination_url, is_active")
+    .select("id, destination_url, is_active, require_email")
     .eq("slug", slug)
     .maybeSingle();
 
   if (!qr || !qr.is_active) {
     return NextResponse.redirect(home, 302);
+  }
+
+  // If email gate is enabled, send to gate page instead of logging + redirecting.
+  if (qr.require_email) {
+    const gate = new URL(`/qr/${slug}/gate`, req.url);
+    return NextResponse.redirect(gate, 302);
   }
 
   // Best-effort scan logging — never block the redirect on it.

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/site";
-import { createQrCode, toggleQrActive } from "@/lib/actions/qr";
+import { createQrCode, toggleQrActive, toggleQrEmailGate } from "@/lib/actions/qr";
 import { QrDownload } from "@/components/admin/QrDownload";
 import { DeleteQrButton } from "@/components/admin/DeleteQrButton";
 
@@ -14,6 +14,7 @@ type Row = {
   name: string;
   destination_url: string;
   is_active: boolean;
+  require_email: boolean;
   qr_scans: { count: number }[];
 };
 
@@ -164,6 +165,17 @@ export default async function QrPage() {
                     <form action={toggleQrActive.bind(null, c.id, !c.is_active)}>
                       <button className="rounded-full border border-line px-3 py-1 font-medium transition-colors hover:bg-cream-soft">
                         {c.is_active ? "Pause" : "Activate"}
+                      </button>
+                    </form>
+                    <form action={toggleQrEmailGate.bind(null, c.id, !c.require_email)}>
+                      <button
+                        className={`rounded-full border px-3 py-1 font-medium transition-colors ${
+                          c.require_email
+                            ? "border-blush-deep bg-blush text-sage-text hover:bg-blush-deep hover:text-white"
+                            : "border-line hover:bg-cream-soft"
+                        }`}
+                      >
+                        {c.require_email ? "Email gate: ON" : "Email gate: OFF"}
                       </button>
                     </form>
                     <DeleteQrButton id={c.id} name={c.name} />

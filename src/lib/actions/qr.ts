@@ -42,3 +42,10 @@ export async function deleteQrCode(id: string) {
   await supabase.from("qr_codes").delete().eq("id", id);
   revalidatePath("/admin/qr");
 }
+
+export async function toggleQrEmailGate(id: string, requireEmail: boolean) {
+  const supabase = await createClient();
+  await supabase.from("qr_codes").update({ require_email: requireEmail }).eq("id", id);
+  revalidatePath("/admin/qr");
+  revalidatePath(`/admin/qr/${id}`);
+}

@@ -15,6 +15,7 @@ export type QrCode = {
   name: string;
   destination_url: string;
   is_active: boolean;
+  require_email: boolean;
 };
 
 export type QrScan = {
@@ -30,4 +31,5 @@ export type QrScan = {
   user_agent: string | null;
   referrer: string | null;
   ip_hash: string | null;
+  email: string | null;
 };

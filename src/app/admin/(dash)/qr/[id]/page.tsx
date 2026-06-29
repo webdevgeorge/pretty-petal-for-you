@@ -6,6 +6,7 @@ import { tally } from "@/lib/tally";
 import { QrDownload } from "@/components/admin/QrDownload";
 import { Breakdown } from "@/components/admin/Breakdown";
 import { DeleteQrButton } from "@/components/admin/DeleteQrButton";
+import { toggleQrEmailGate } from "@/lib/actions/qr";
 import type { QrCode, QrScan } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
@@ -97,7 +98,20 @@ export default async function QrDetail({
               <p className="mt-1 text-sage-text/60">→ {qr.destination_url}</p>
               <p className="mt-1 break-all text-xs text-sage-text/40">{target}</p>
             </div>
-            <DeleteQrButton id={qr.id} name={qr.name} />
+            <div className="flex flex-wrap gap-2">
+              <form action={toggleQrEmailGate.bind(null, qr.id, !qr.require_email)}>
+                <button
+                  className={`rounded-full border px-4 py-1.5 font-medium transition-colors ${
+                    qr.require_email
+                      ? "border-blush-deep bg-blush text-sage-text hover:bg-blush-deep hover:text-white"
+                      : "border-line hover:bg-cream-soft"
+                  }`}
+                >
+                  {qr.require_email ? "Email gate: ON" : "Email gate: OFF"}
+                </button>
+              </form>
+              <DeleteQrButton id={qr.id} name={qr.name} />
+            </div>
           </div>
 
           {/* summary stats */}
@@ -169,6 +183,13 @@ export default async function QrDetail({
               className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-3"
             >
               <span className="text-sage-text/70">{fmtDate(s.created_at)}</span>
+              {s.email ? (
+                <span className="rounded-full bg-blush/40 px-2 py-0.5 text-xs font-medium text-sage-text">
+                  {s.email}
+                </span>
+              ) : (
+                <span className="text-xs text-sage-text/30">no email</span>
+              )}
               <span className="text-sage-text/70">
                 {[s.city, s.country].filter(Boolean).join(", ") || "—"}
               </span>

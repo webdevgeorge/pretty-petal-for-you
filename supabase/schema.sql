@@ -50,7 +50,8 @@ create table if not exists public.qr_codes (
   slug            text not null unique,
   name            text not null,
   destination_url text not null,
-  is_active       boolean not null default true
+  is_active       boolean not null default true,
+  require_email   boolean not null default false
 );
 
 -- ---------------------------------------------------------------------------
@@ -68,7 +69,8 @@ create table if not exists public.qr_scans (
   browser     text,
   user_agent  text,
   referrer    text,
-  ip_hash     text   -- hashed, never the raw IP
+  ip_hash     text,  -- hashed, never the raw IP
+  email       text   -- captured via email gate (optional)
 );
 create index if not exists qr_scans_qr_code_id_idx on public.qr_scans (qr_code_id);
 create index if not exists qr_scans_created_at_idx  on public.qr_scans (created_at desc);
