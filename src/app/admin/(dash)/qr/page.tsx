@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/site";
 import { createQrCode, toggleQrActive } from "@/lib/actions/qr";
 import { QrDownload } from "@/components/admin/QrDownload";
+import { DeleteQrButton } from "@/components/admin/DeleteQrButton";
 
 export const dynamic = "force-dynamic";
 
@@ -16,14 +17,49 @@ type Row = {
   qr_scans: { count: number }[];
 };
 
+type ScanSummary = {
+  qr_code_id: string;
+  created_at: string;
+};
+
 export default async function QrPage() {
   const supabase = await createClient();
   const siteUrl = await getSiteUrl();
-  const { data } = await supabase
-    .from("qr_codes")
-    .select("id, created_at, slug, name, destination_url, is_active, qr_scans(count)")
-    .order("created_at", { ascending: false });
+
+  const cutoff7 = new Date(Date.now() - 7 * 86_400_000).toISOString();
+
+  const [{ data }, { data: recentScans }] = await Promise.all([
+    supabase
+      .from("qr_codes")
+      .select("id, created_at, slug, name, destination_url, is_active, qr_scans(count)")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("qr_scans")
+      .select("qr_code_id, created_at")
+      .gte("created_at", cutoff7),
+  ]);
+
   const codes = (data ?? []) as unknown as Row[];
+  const recent = (recentScans ?? []) as ScanSummary[];
+
+  const scans7 = new Map<string, number>();
+  const lastScan = new Map<string, string>();
+  for (const s of recent) {
+    scans7.set(s.qr_code_id, (scans7.get(s.qr_code_id) ?? 0) + 1);
+  }
+  // last scan from all-time scans — fetch per-code latest
+  const { data: latestScans } = await supabase
+    .from("qr_scans")
+    .select("qr_code_id, created_at")
+    .order("created_at", { ascending: false })
+    .limit(500);
+  for (const s of (latestScans ?? []) as ScanSummary[]) {
+    if (!lastScan.has(s.qr_code_id)) lastScan.set(s.qr_code_id, s.created_at);
+  }
+
+  function fmtDate(iso: string) {
+    return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
 
   return (
     <div>
@@ -72,7 +108,9 @@ export default async function QrPage() {
         <ul className="mt-8 grid gap-5 lg:grid-cols-2">
           {codes.map((c) => {
             const target = `${siteUrl}/qr/${c.slug}`;
-            const scans = c.qr_scans?.[0]?.count ?? 0;
+            const totalScans = c.qr_scans?.[0]?.count ?? 0;
+            const weekScans = scans7.get(c.id) ?? 0;
+            const last = lastScan.get(c.id);
             return (
               <li
                 key={c.id}
@@ -95,11 +133,26 @@ export default async function QrPage() {
                   <p className="mt-1 truncate text-sage-text/60" title={c.destination_url}>
                     → {c.destination_url}
                   </p>
-                  <p className="mt-3 text-sage-text">
-                    <span className="text-2xl font-bold">{scans}</span>{" "}
-                    <span className="text-sage-text/60">scans</span>
-                  </p>
-                  <p className="mt-1 break-all text-sage-text/50">{target}</p>
+
+                  {/* scan stats */}
+                  <div className="mt-3 flex gap-5">
+                    <div>
+                      <p className="text-2xl font-bold text-sage-text">{totalScans}</p>
+                      <p className="text-xs text-sage-text/50">total scans</p>
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-sage-text">{weekScans}</p>
+                      <p className="text-xs text-sage-text/50">last 7 days</p>
+                    </div>
+                  </div>
+
+                  {last && (
+                    <p className="mt-1 text-xs text-sage-text/50">
+                      Last scan: {fmtDate(last)}
+                    </p>
+                  )}
+
+                  <p className="mt-2 break-all text-xs text-sage-text/40">{target}</p>
 
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Link
@@ -113,6 +166,7 @@ export default async function QrPage() {
                         {c.is_active ? "Pause" : "Activate"}
                       </button>
                     </form>
+                    <DeleteQrButton id={c.id} name={c.name} />
                   </div>
                 </div>
               </li>
