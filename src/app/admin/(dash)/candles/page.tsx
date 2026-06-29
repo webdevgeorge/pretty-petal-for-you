@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { CandleForm } from "@/components/admin/CandleForm";
 import { DeleteCandleButton } from "@/components/admin/DeleteCandleButton";
@@ -11,6 +12,7 @@ type Candle = {
   description: string | null;
   tag: string | null;
   image_url: string;
+  link_url: string | null;
   is_published: boolean;
   sort_order: number;
 };
@@ -19,7 +21,7 @@ export default async function CandlesPage() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("candles")
-    .select("id, name, description, tag, image_url, is_published, sort_order")
+    .select("id, name, description, tag, image_url, link_url, is_published, sort_order")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
 
@@ -75,9 +77,18 @@ export default async function CandlesPage() {
                 {c.description && (
                   <p className="mt-0.5 text-sm text-sage-text/60">{c.description}</p>
                 )}
-                <p className="mt-1 text-xs text-sage-text/40">sort: {c.sort_order}</p>
+                <p className="mt-1 text-xs text-sage-text/40">
+                  sort: {c.sort_order}
+                  {c.link_url && <> · 🔗 linked</>}
+                </p>
 
                 <div className="mt-3 flex flex-wrap gap-2">
+                  <Link
+                    href={`/admin/candles/${c.id}`}
+                    className="rounded-full bg-sage-text/10 px-3 py-1 text-sm font-medium text-sage-text transition-colors hover:bg-sage-text/15"
+                  >
+                    Edit
+                  </Link>
                   <form action={toggleCandlePublished.bind(null, c.id, !c.is_published)}>
                     <button
                       className={`rounded-full border px-3 py-1 text-sm font-medium transition-colors ${

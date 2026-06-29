@@ -85,6 +85,7 @@ create table if not exists public.candles (
   description  text,
   tag          text,
   image_url    text not null,
+  link_url     text,
   is_published boolean not null default true,
   sort_order   integer not null default 0
 );

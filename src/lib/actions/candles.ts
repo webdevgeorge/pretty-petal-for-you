@@ -4,30 +4,35 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+function parseForm(formData: FormData) {
+  return {
+    name: String(formData.get("name") ?? "").trim(),
+    description: String(formData.get("description") ?? "").trim() || null,
+    tag: String(formData.get("tag") ?? "").trim() || null,
+    image_url: String(formData.get("image_url") ?? "").trim(),
+    link_url: String(formData.get("link_url") ?? "").trim() || null,
+    sort_order: Number(formData.get("sort_order") ?? 0),
+  };
+}
+
 export async function createCandle(formData: FormData) {
-  const name = String(formData.get("name") ?? "").trim();
-  const description = String(formData.get("description") ?? "").trim() || null;
-  const tag = String(formData.get("tag") ?? "").trim() || null;
-  const image_url = String(formData.get("image_url") ?? "").trim();
-  const sort_order = Number(formData.get("sort_order") ?? 0);
-  if (!name || !image_url) return { error: "Name and image are required" };
+  const fields = parseForm(formData);
+  if (!fields.name || !fields.image_url) return { error: "Name and image are required" };
 
   const supabase = await createClient();
-  await supabase.from("candles").insert({ name, description, tag, image_url, sort_order });
+  await supabase.from("candles").insert(fields);
   revalidatePath("/admin/candles");
+  revalidatePath("/");
 }
 
 export async function updateCandle(id: string, formData: FormData) {
-  const name = String(formData.get("name") ?? "").trim();
-  const description = String(formData.get("description") ?? "").trim() || null;
-  const tag = String(formData.get("tag") ?? "").trim() || null;
-  const image_url = String(formData.get("image_url") ?? "").trim();
-  const sort_order = Number(formData.get("sort_order") ?? 0);
-  if (!name || !image_url) return { error: "Name and image are required" };
+  const fields = parseForm(formData);
+  if (!fields.name || !fields.image_url) return { error: "Name and image are required" };
 
   const supabase = await createClient();
-  await supabase.from("candles").update({ name, description, tag, image_url, sort_order }).eq("id", id);
+  await supabase.from("candles").update(fields).eq("id", id);
   revalidatePath("/admin/candles");
+  revalidatePath("/");
 }
 
 export async function deleteCandle(id: string) {
@@ -41,10 +46,12 @@ export async function deleteCandle(id: string) {
   }
   await supabase.from("candles").delete().eq("id", id);
   revalidatePath("/admin/candles");
+  revalidatePath("/");
 }
 
 export async function toggleCandlePublished(id: string, isPublished: boolean) {
   const supabase = await createClient();
   await supabase.from("candles").update({ is_published: isPublished }).eq("id", id);
   revalidatePath("/admin/candles");
+  revalidatePath("/");
 }

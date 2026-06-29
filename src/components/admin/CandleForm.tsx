@@ -1,15 +1,28 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { createBrowserClient } from "@supabase/ssr";
-import { createCandle } from "@/lib/actions/candles";
+import { createCandle, updateCandle } from "@/lib/actions/candles";
 
 const TAGS = ["Spring", "Summer", "Autumn", "Winter", "Christmas", "Halloween", "Celebration", "Valentine", "Birthday"];
 
-export function CandleForm() {
-  const [preview, setPreview] = useState<string | null>(null);
+export type CandleFormValues = {
+  id: string;
+  name: string;
+  description: string | null;
+  tag: string | null;
+  image_url: string;
+  link_url: string | null;
+  sort_order: number;
+};
+
+export function CandleForm({ candle }: { candle?: CandleFormValues }) {
+  const isEdit = !!candle;
+  const router = useRouter();
+  const [preview, setPreview] = useState<string | null>(candle?.image_url ?? null);
   const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -22,40 +35,50 @@ export function CandleForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!file) { setError("Please select an image."); return; }
-    setUploading(true);
+    const formEl = e.currentTarget;
+
+    // Image required on create; on edit it's optional (keep existing)
+    if (!isEdit && !file) { setError("Please select an image."); return; }
+
+    setBusy(true);
     setError(null);
 
-    // Upload image directly from browser to Supabase Storage
-    const supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
-    const ext = file.name.split(".").pop();
-    const filename = `${Date.now()}.${ext}`;
-    const { data: upload, error: uploadErr } = await supabase.storage
-      .from("candle-images")
-      .upload(filename, file, { contentType: file.type, upsert: false });
+    let imageUrl = candle?.image_url ?? "";
 
-    if (uploadErr || !upload) {
-      setError("Image upload failed: " + (uploadErr?.message ?? "unknown error"));
-      setUploading(false);
-      return;
+    // Upload a new image if one was picked
+    if (file) {
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      );
+      const ext = file.name.split(".").pop();
+      const filename = `${Date.now()}.${ext}`;
+      const { data: upload, error: uploadErr } = await supabase.storage
+        .from("candle-images")
+        .upload(filename, file, { contentType: file.type, upsert: false });
+
+      if (uploadErr || !upload) {
+        setError("Image upload failed: " + (uploadErr?.message ?? "unknown error"));
+        setBusy(false);
+        return;
+      }
+      imageUrl = supabase.storage.from("candle-images").getPublicUrl(upload.path).data.publicUrl;
     }
 
-    const { data: { publicUrl } } = supabase.storage
-      .from("candle-images")
-      .getPublicUrl(upload.path);
+    const fd = new FormData(formEl);
+    fd.set("image_url", imageUrl);
 
-    // Save candle record via server action
-    const fd = new FormData(e.currentTarget);
-    fd.set("image_url", publicUrl);
-    await createCandle(fd);
-
-    formRef.current?.reset();
-    setFile(null);
-    setPreview(null);
-    setUploading(false);
+    if (isEdit && candle) {
+      await updateCandle(candle.id, fd);
+      router.push("/admin/candles");
+      router.refresh();
+    } else {
+      await createCandle(fd);
+      formRef.current?.reset();
+      setFile(null);
+      setPreview(null);
+    }
+    setBusy(false);
   }
 
   return (
@@ -64,7 +87,9 @@ export function CandleForm() {
       onSubmit={handleSubmit}
       className="rounded-3xl bg-card p-6 ring-1 ring-line"
     >
-      <h2 className="font-semibold text-sage-text">Add new candle</h2>
+      <h2 className="font-semibold text-sage-text">
+        {isEdit ? "Edit candle" : "Add new candle"}
+      </h2>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1">
@@ -72,6 +97,7 @@ export function CandleForm() {
           <input
             name="name"
             required
+            defaultValue={candle?.name ?? ""}
             placeholder="Spring Bouquet"
             className="rounded-xl border border-line bg-cream-bg/60 px-4 py-2.5 outline-none focus:border-blush-deep"
           />
@@ -81,6 +107,7 @@ export function CandleForm() {
           <span className="text-sm font-medium text-sage-text/70">Tag / season</span>
           <select
             name="tag"
+            defaultValue={candle?.tag ?? ""}
             className="rounded-xl border border-line bg-cream-bg/60 px-4 py-2.5 outline-none focus:border-blush-deep"
           >
             <option value="">— none —</option>
@@ -92,7 +119,21 @@ export function CandleForm() {
           <span className="text-sm font-medium text-sage-text/70">Short description</span>
           <input
             name="description"
+            defaultValue={candle?.description ?? ""}
             placeholder="roses, blooms & golden wheat"
+            className="rounded-xl border border-line bg-cream-bg/60 px-4 py-2.5 outline-none focus:border-blush-deep"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1 sm:col-span-2">
+          <span className="text-sm font-medium text-sage-text/70">
+            Link (optional) — where the candle card goes when clicked
+          </span>
+          <input
+            name="link_url"
+            type="url"
+            defaultValue={candle?.link_url ?? ""}
+            placeholder="https://instagram.com/p/… or any URL"
             className="rounded-xl border border-line bg-cream-bg/60 px-4 py-2.5 outline-none focus:border-blush-deep"
           />
         </label>
@@ -102,13 +143,15 @@ export function CandleForm() {
           <input
             name="sort_order"
             type="number"
-            defaultValue={0}
+            defaultValue={candle?.sort_order ?? 0}
             className="rounded-xl border border-line bg-cream-bg/60 px-4 py-2.5 outline-none focus:border-blush-deep"
           />
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-sage-text/70">Photo *</span>
+          <span className="text-sm font-medium text-sage-text/70">
+            Photo {isEdit ? "(leave empty to keep current)" : "*"}
+          </span>
           <input
             type="file"
             accept="image/*"
@@ -127,13 +170,24 @@ export function CandleForm() {
 
       {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
 
-      <button
-        type="submit"
-        disabled={uploading}
-        className="mt-5 rounded-full bg-blush px-6 py-2.5 font-semibold text-sage-text transition-colors hover:bg-blush-deep hover:text-white disabled:opacity-50"
-      >
-        {uploading ? "Uploading…" : "Add candle"}
-      </button>
+      <div className="mt-5 flex gap-2">
+        <button
+          type="submit"
+          disabled={busy}
+          className="rounded-full bg-blush px-6 py-2.5 font-semibold text-sage-text transition-colors hover:bg-blush-deep hover:text-white disabled:opacity-50"
+        >
+          {busy ? "Saving…" : isEdit ? "Save changes" : "Add candle"}
+        </button>
+        {isEdit && (
+          <button
+            type="button"
+            onClick={() => router.push("/admin/candles")}
+            className="rounded-full border border-line px-6 py-2.5 font-medium transition-colors hover:bg-cream-soft"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }

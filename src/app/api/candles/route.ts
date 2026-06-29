@@ -9,7 +9,7 @@ export async function GET() {
   const supabase = createAdminClient();
   const { data } = await supabase
     .from("candles")
-    .select("id, name, description, tag, image_url, sort_order")
+    .select("id, name, description, tag, image_url, link_url, sort_order")
     .eq("is_published", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });

@@ -80,7 +80,7 @@ const petals = [
 /* ------------------------------------------------------------------ */
 /*  Page                                                                */
 /* ------------------------------------------------------------------ */
-type DbCandle = { id: string; name: string; description: string | null; tag: string | null; image_url: string };
+type DbCandle = { id: string; name: string; description: string | null; tag: string | null; image_url: string; link_url: string | null };
 
 export default function Home() {
   const { t } = useLang();
@@ -297,8 +297,8 @@ export default function Home() {
           {extraCandles && extraCandles.length > 0 ? (
             /* Full collection from the database (revealed by "See all") */
             <ul className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {extraCandles.map((c, i) => (
-                <Reveal key={c.id} as="li" delay={(i % 3) * 110} className="group h-full">
+              {extraCandles.map((c, i) => {
+                const card = (
                   <figure className="shine relative h-full overflow-hidden rounded-3xl ring-1 ring-line/70 shadow-sm">
                     <div className="relative aspect-[4/5]">
                       <Image
@@ -320,8 +320,24 @@ export default function Home() {
                       </figcaption>
                     </div>
                   </figure>
-                </Reveal>
-              ))}
+                );
+                return (
+                  <Reveal key={c.id} as="li" delay={(i % 3) * 110} className="group h-full">
+                    {c.link_url ? (
+                      <a
+                        href={c.link_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block h-full"
+                      >
+                        {card}
+                      </a>
+                    ) : (
+                      card
+                    )}
+                  </Reveal>
+                );
+              })}
             </ul>
           ) : (
             /* Default featured set — server-rendered for instant load + SEO */
