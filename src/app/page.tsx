@@ -179,11 +179,11 @@ export default function Home() {
           {/* scroll cue */}
           <a
             href="#about"
-            className="anim-rise mt-12 text-sage-text/55"
+            className="anim-rise mt-12 text-sage-text/70"
             style={{ animationDelay: "0.6s" }}
             aria-label={t.hero.scroll}
           >
-            <svg className="anim-bob h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg className="anim-bob h-6 w-6 text-sage-text/70" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
@@ -280,29 +280,27 @@ export default function Home() {
 
           <ul className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {t.collection.gallery.map((g, i) => (
-              <Reveal key={g.name} delay={(i % 3) * 110} className="h-full">
-                <li className="group h-full">
-                  <figure className="shine relative h-full overflow-hidden rounded-3xl ring-1 ring-line/70 shadow-sm">
-                    <div className="relative aspect-[4/5]">
-                      <Image
-                        src={galleryImages[i]}
-                        alt={g.alt}
-                        placeholder="blur"
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-sage-deep/85 via-sage-deep/15 to-transparent transition-opacity duration-500 group-hover:from-sage-deep/90" />
-                      <span className="absolute left-4 top-4 rounded-full bg-cream-bg/85 px-3 py-1 font-semibold text-sage-text backdrop-blur-sm">
-                        {g.tag}
-                      </span>
-                      <figcaption className="absolute inset-x-0 bottom-0 p-5 text-left transition-transform duration-500 group-hover:-translate-y-1">
-                        <h3 className="t-heading text-cream">{g.name}</h3>
-                        <p className="mt-1 text-cream/85">{g.note}</p>
-                      </figcaption>
-                    </div>
-                  </figure>
-                </li>
+              <Reveal key={g.name} as="li" delay={(i % 3) * 110} className="group h-full">
+                <figure className="shine relative h-full overflow-hidden rounded-3xl ring-1 ring-line/70 shadow-sm">
+                  <div className="relative aspect-[4/5]">
+                    <Image
+                      src={galleryImages[i]}
+                      alt={g.alt}
+                      placeholder="blur"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-sage-deep/85 via-sage-deep/15 to-transparent transition-opacity duration-500 group-hover:from-sage-deep/90" />
+                    <span className="absolute left-4 top-4 rounded-full bg-cream-bg/85 px-3 py-1 font-semibold text-sage-text backdrop-blur-sm">
+                      {g.tag}
+                    </span>
+                    <figcaption className="absolute inset-x-0 bottom-0 p-5 text-left transition-transform duration-500 group-hover:-translate-y-1">
+                      <h3 className="t-heading text-cream">{g.name}</h3>
+                      <p className="mt-1 text-cream/85">{g.note}</p>
+                    </figcaption>
+                  </div>
+                </figure>
               </Reveal>
             ))}
           </ul>
@@ -333,23 +331,21 @@ export default function Home() {
 
           <ul className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
             {t.features.items.map((f, i) => (
-              <Reveal key={f.title} delay={i * 120}>
-                <li className="group text-center">
-                  <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blush-soft text-blush-deep transition-transform duration-300 group-hover:scale-110">
-                    {i === 0 && <Flame className="h-6 w-6 anim-flicker" />}
-                    {i === 1 && (
-                      <svg viewBox="0 0 24 24" className="h-6 w-6 anim-floaty" aria-hidden="true">
-                        <path
-                          d="M12 20.5S3.5 15 3.5 8.9A4.4 4.4 0 0 1 12 7.2a4.4 4.4 0 0 1 8.5 1.7C20.5 15 12 20.5 12 20.5Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    )}
-                    {i === 2 && <Petal className="h-6 w-6 anim-floaty-slow" />}
-                  </span>
-                  <h3 className="t-heading mt-5 text-sage-text">{f.title}</h3>
-                  <p className="mx-auto mt-3 max-w-xs text-sage-text/75">{f.note}</p>
-                </li>
+              <Reveal key={f.title} as="li" delay={i * 120} className="group text-center">
+                <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blush-soft text-blush-deep transition-transform duration-300 group-hover:scale-110">
+                  {i === 0 && <Flame className="h-6 w-6 anim-flicker" />}
+                  {i === 1 && (
+                    <svg viewBox="0 0 24 24" className="h-6 w-6 anim-floaty" aria-hidden="true">
+                      <path
+                        d="M12 20.5S3.5 15 3.5 8.9A4.4 4.4 0 0 1 12 7.2a4.4 4.4 0 0 1 8.5 1.7C20.5 15 12 20.5 12 20.5Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  )}
+                  {i === 2 && <Petal className="h-6 w-6 anim-floaty-slow" />}
+                </span>
+                <h3 className="t-heading mt-5 text-sage-text">{f.title}</h3>
+                <p className="mx-auto mt-3 max-w-xs text-sage-text/75">{f.note}</p>
               </Reveal>
             ))}
           </ul>
@@ -389,7 +385,7 @@ export default function Home() {
 
             <ContactForm />
 
-            <p className="mt-8 text-cream/60">{t.contact.form.or}</p>
+            <p className="mt-8 text-cream/80">{t.contact.form.or}</p>
             <div className="mt-3 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href={INSTAGRAM}

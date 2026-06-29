@@ -1,21 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { ElementType, useEffect, useRef, useState } from "react";
 
-/**
- * Fades + lifts its children into view the first time they reach the viewport.
- * Stagger groups of items by passing an increasing `delay` (ms).
- */
 export function Reveal({
   children,
   delay = 0,
   className = "",
+  as,
 }: {
   children: React.ReactNode;
   delay?: number;
   className?: string;
+  as?: ElementType;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const Tag = as ?? "div";
+  const ref = useRef<HTMLElement>(null);
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
@@ -35,12 +34,12 @@ export function Reveal({
   }, []);
 
   return (
-    <div
+    <Tag
       ref={ref}
       className={`reveal ${shown ? "in" : ""} ${className}`}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
-    </div>
+    </Tag>
   );
 }
