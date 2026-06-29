@@ -19,7 +19,7 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.prettypetal.shop"),
   title: "Pretty Petal — Handmade Decoration Candles",
   description:
     "Pretty Petal makes hand-poured decoration candles in small batches — pretty little things, made slowly and with a lot of love.",

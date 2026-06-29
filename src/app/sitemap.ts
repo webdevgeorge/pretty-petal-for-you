@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { posts } from "@/components/blog";
 
-const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://pretty-petal-for-you.vercel.app").replace(/\/$/, "");
+const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.prettypetal.shop").replace(/\/$/, "");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const blogEntries: MetadataRoute.Sitemap = posts.map((p) => ({
