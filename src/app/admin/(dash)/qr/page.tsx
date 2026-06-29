@@ -32,7 +32,7 @@ export default async function QrPage() {
   const [{ data }, { data: recentScans }] = await Promise.all([
     supabase
       .from("qr_codes")
-      .select("id, created_at, slug, name, destination_url, is_active, qr_scans(count)")
+      .select("id, created_at, slug, name, destination_url, is_active, require_email, qr_scans(count)")
       .order("created_at", { ascending: false }),
     supabase
       .from("qr_scans")
