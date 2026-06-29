@@ -27,7 +27,7 @@ const galleryImages: StaticImageData[] = [
 ];
 
 const INSTAGRAM = "https://www.instagram.com/prettypetalforyou";
-const FACEBOOK = "https://www.facebook.com/prettypetalforyou";
+const FACEBOOK = "https://www.facebook.com/profile.php?id=61577608970603";
 
 /* Her portrait on the home page. Swap the import in src/media to change it. */
 const makerPhoto: StaticImageData | null = makerImage;
