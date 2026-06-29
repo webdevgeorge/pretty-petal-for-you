@@ -55,6 +55,32 @@ function Petal({ className = "", style }: { className?: string; style?: React.CS
   );
 }
 
+function InstagramGlyph({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
+      <circle cx="12" cy="12" r="4.2" />
+      <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/* Fire a GA conversion event when someone heads to Instagram. */
+function trackInstagram(label: string) {
+  (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag?.(
+    "event",
+    "instagram_click",
+    { event_category: "engagement", event_label: label },
+  );
+}
+
 function Flourish({ tone = "sage" }: { tone?: "sage" | "cream" }) {
   const line = tone === "cream" ? "bg-cream/30" : "bg-line";
   const flame = tone === "cream" ? "text-cream/70" : "text-blush";
@@ -179,13 +205,17 @@ export default function Home() {
             style={{ animationDelay: "0.4s" }}
           >
             <a
-              href="#collection"
-              className="shine rounded-full bg-blush px-7 py-3 font-semibold text-sage-text transition-all duration-300 hover:-translate-y-0.5 hover:bg-blush-deep hover:text-white hover:shadow-lg hover:shadow-blush/30"
+              href={INSTAGRAM}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackInstagram("hero_cta")}
+              className="shine inline-flex items-center justify-center gap-2 rounded-full bg-blush px-7 py-3 font-semibold text-sage-text transition-all duration-300 hover:-translate-y-0.5 hover:bg-blush-deep hover:text-white hover:shadow-lg hover:shadow-blush/30"
             >
+              <InstagramGlyph className="h-5 w-5" />
               {t.hero.cta1}
             </a>
             <a
-              href="#about"
+              href="#collection"
               className="rounded-full border border-sage-text/30 bg-cream-bg/40 px-7 py-3 font-medium text-sage-text backdrop-blur-sm transition-colors hover:bg-cream-bg/75"
             >
               {t.hero.cta2}
@@ -469,8 +499,10 @@ export default function Home() {
                 href={INSTAGRAM}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-cream/40 px-6 py-2.5 font-medium text-cream transition-colors hover:bg-cream/10"
+                onClick={() => trackInstagram("contact_cta")}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-cream/40 px-6 py-2.5 font-medium text-cream transition-colors hover:bg-cream/10"
               >
+                <InstagramGlyph className="h-4 w-4" />
                 {t.contact.instagram}
               </a>
               <a
