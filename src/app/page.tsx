@@ -11,7 +11,7 @@ import springBouquet from "@/media/spring-bouquet.png";
 import pinkWinter from "@/media/pink-winter.png";
 import goldenFifty from "@/media/golden-fifty.png";
 import frostedPine from "@/media/frosted-pine.png";
-import christmasShapes from "@/media/christmas-shapes.png";
+import christmasShapes from "@/media/image copy.png";
 import spookyNight from "@/media/spooky-night.png";
 import heroCandles from "@/media/hero-candles.png";
 import makerImage from "@/media/image.png";
