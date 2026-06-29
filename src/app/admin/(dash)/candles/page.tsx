@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { CandleForm } from "@/components/admin/CandleForm";
-import { deleteCandle, toggleCandlePublished } from "@/lib/actions/candles";
+import { DeleteCandleButton } from "@/components/admin/DeleteCandleButton";
+import { toggleCandlePublished } from "@/lib/actions/candles";
 
 export const dynamic = "force-dynamic";
 
@@ -88,16 +89,7 @@ export default async function CandlesPage() {
                       {c.is_published ? "Published" : "Hidden"}
                     </button>
                   </form>
-                  <form
-                    action={deleteCandle.bind(null, c.id)}
-                    onSubmit={(e) => {
-                      if (!confirm(`Delete "${c.name}"?`)) e.preventDefault();
-                    }}
-                  >
-                    <button className="rounded-full border border-red-200 px-3 py-1 text-sm font-medium text-red-500 transition-colors hover:bg-red-50">
-                      Delete
-                    </button>
-                  </form>
+                  <DeleteCandleButton id={c.id} name={c.name} />
                 </div>
               </div>
             </li>

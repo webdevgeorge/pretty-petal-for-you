@@ -294,45 +294,19 @@ export default function Home() {
             </div>
           </Reveal>
 
-          <ul className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {t.collection.gallery.map((g, i) => (
-              <Reveal key={g.name} as="li" delay={(i % 3) * 110} className="group h-full">
-                <figure className="shine relative h-full overflow-hidden rounded-3xl ring-1 ring-line/70 shadow-sm">
-                  <div className="relative aspect-[4/5]">
-                    <Image
-                      src={galleryImages[i]}
-                      alt={g.alt}
-                      placeholder="blur"
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-sage-deep/85 via-sage-deep/15 to-transparent transition-opacity duration-500 group-hover:from-sage-deep/90" />
-                    <span className="absolute left-4 top-4 rounded-full bg-cream-bg/85 px-3 py-1 font-semibold text-sage-text backdrop-blur-sm">
-                      {g.tag}
-                    </span>
-                    <figcaption className="absolute inset-x-0 bottom-0 p-5 text-left transition-transform duration-500 group-hover:-translate-y-1">
-                      <h3 className="t-heading text-cream">{g.name}</h3>
-                      <p className="mt-1 text-cream/85">{g.note}</p>
-                    </figcaption>
-                  </div>
-                </figure>
-              </Reveal>
-            ))}
-          </ul>
-
-          {/* Extra candles from database */}
-          {extraCandles && extraCandles.length > 0 && (
-            <ul className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {extraCandles && extraCandles.length > 0 ? (
+            /* Full collection from the database (revealed by "See all") */
+            <ul className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {extraCandles.map((c, i) => (
                 <Reveal key={c.id} as="li" delay={(i % 3) * 110} className="group h-full">
                   <figure className="shine relative h-full overflow-hidden rounded-3xl ring-1 ring-line/70 shadow-sm">
                     <div className="relative aspect-[4/5]">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={c.image_url}
                         alt={c.name}
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-sage-deep/85 via-sage-deep/15 to-transparent transition-opacity duration-500 group-hover:from-sage-deep/90" />
                       {c.tag && (
@@ -343,6 +317,34 @@ export default function Home() {
                       <figcaption className="absolute inset-x-0 bottom-0 p-5 text-left transition-transform duration-500 group-hover:-translate-y-1">
                         <h3 className="t-heading text-cream">{c.name}</h3>
                         {c.description && <p className="mt-1 text-cream/85">{c.description}</p>}
+                      </figcaption>
+                    </div>
+                  </figure>
+                </Reveal>
+              ))}
+            </ul>
+          ) : (
+            /* Default featured set — server-rendered for instant load + SEO */
+            <ul className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {t.collection.gallery.map((g, i) => (
+                <Reveal key={g.name} as="li" delay={(i % 3) * 110} className="group h-full">
+                  <figure className="shine relative h-full overflow-hidden rounded-3xl ring-1 ring-line/70 shadow-sm">
+                    <div className="relative aspect-[4/5]">
+                      <Image
+                        src={galleryImages[i]}
+                        alt={g.alt}
+                        placeholder="blur"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-sage-deep/85 via-sage-deep/15 to-transparent transition-opacity duration-500 group-hover:from-sage-deep/90" />
+                      <span className="absolute left-4 top-4 rounded-full bg-cream-bg/85 px-3 py-1 font-semibold text-sage-text backdrop-blur-sm">
+                        {g.tag}
+                      </span>
+                      <figcaption className="absolute inset-x-0 bottom-0 p-5 text-left transition-transform duration-500 group-hover:-translate-y-1">
+                        <h3 className="t-heading text-cream">{g.name}</h3>
+                        <p className="mt-1 text-cream/85">{g.note}</p>
                       </figcaption>
                     </div>
                   </figure>

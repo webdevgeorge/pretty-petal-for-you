@@ -75,6 +75,21 @@ create table if not exists public.qr_scans (
 create index if not exists qr_scans_qr_code_id_idx on public.qr_scans (qr_code_id);
 create index if not exists qr_scans_created_at_idx  on public.qr_scans (created_at desc);
 
+-- ---------------------------------------------------------------------------
+--  candles — gallery items shown on the site, managed from /admin/candles
+-- ---------------------------------------------------------------------------
+create table if not exists public.candles (
+  id           uuid primary key default gen_random_uuid(),
+  created_at   timestamptz not null default now(),
+  name         text not null,
+  description  text,
+  tag          text,
+  image_url    text not null,
+  is_published boolean not null default true,
+  sort_order   integer not null default 0
+);
+create index if not exists candles_sort_idx on public.candles (sort_order, created_at);
+
 -- ============================================================================
 --  Row Level Security
 --  Public writes (form submit, scan logging) run server-side with the SERVICE
@@ -84,12 +99,15 @@ alter table public.admins      enable row level security;
 alter table public.submissions enable row level security;
 alter table public.qr_codes    enable row level security;
 alter table public.qr_scans    enable row level security;
+alter table public.candles     enable row level security;
 
 drop policy if exists "admins read"            on public.admins;
 drop policy if exists "submissions admin read" on public.submissions;
 drop policy if exists "submissions admin write" on public.submissions;
 drop policy if exists "qr_codes admin all"     on public.qr_codes;
 drop policy if exists "qr_scans admin read"    on public.qr_scans;
+drop policy if exists "candles public read"    on public.candles;
+drop policy if exists "candles admin all"      on public.candles;
 
 create policy "admins read" on public.admins
   for select to authenticated using (public.is_admin());
@@ -105,6 +123,13 @@ create policy "qr_codes admin all" on public.qr_codes
 
 create policy "qr_scans admin read" on public.qr_scans
   for select to authenticated using (public.is_admin());
+
+-- candles are publicly readable when published; only admins can write.
+create policy "candles public read" on public.candles
+  for select using (is_published = true);
+
+create policy "candles admin all" on public.candles
+  for all to authenticated using (public.is_admin()) with check (public.is_admin());
 
 -- ============================================================================
 --  FINAL STEP — make yourself an admin (replace with your login email):
