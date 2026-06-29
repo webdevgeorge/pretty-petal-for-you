@@ -1,6 +1,7 @@
 "use client";
 
 import Image, { type StaticImageData } from "next/image";
+import { useState } from "react";
 import { Reveal } from "@/components/Reveal";
 import { useLang } from "@/components/i18n";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -79,9 +80,24 @@ const petals = [
 /* ------------------------------------------------------------------ */
 /*  Page                                                                */
 /* ------------------------------------------------------------------ */
+type DbCandle = { id: string; name: string; description: string | null; tag: string | null; image_url: string };
+
 export default function Home() {
   const { t } = useLang();
   const marqueeStrip = Array.from({ length: 4 }, () => t.marquee).flat();
+  const [extraCandles, setExtraCandles] = useState<DbCandle[] | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  async function loadMore() {
+    setLoadingMore(true);
+    try {
+      const res = await fetch("/api/candles");
+      const data: DbCandle[] = await res.json();
+      setExtraCandles(data);
+    } finally {
+      setLoadingMore(false);
+    }
+  }
 
   return (
     <div className="t-body">
@@ -304,6 +320,50 @@ export default function Home() {
               </Reveal>
             ))}
           </ul>
+
+          {/* Extra candles from database */}
+          {extraCandles && extraCandles.length > 0 && (
+            <ul className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {extraCandles.map((c, i) => (
+                <Reveal key={c.id} as="li" delay={(i % 3) * 110} className="group h-full">
+                  <figure className="shine relative h-full overflow-hidden rounded-3xl ring-1 ring-line/70 shadow-sm">
+                    <div className="relative aspect-[4/5]">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={c.image_url}
+                        alt={c.name}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-sage-deep/85 via-sage-deep/15 to-transparent transition-opacity duration-500 group-hover:from-sage-deep/90" />
+                      {c.tag && (
+                        <span className="absolute left-4 top-4 rounded-full bg-cream-bg/85 px-3 py-1 font-semibold text-sage-text backdrop-blur-sm">
+                          {c.tag}
+                        </span>
+                      )}
+                      <figcaption className="absolute inset-x-0 bottom-0 p-5 text-left transition-transform duration-500 group-hover:-translate-y-1">
+                        <h3 className="t-heading text-cream">{c.name}</h3>
+                        {c.description && <p className="mt-1 text-cream/85">{c.description}</p>}
+                      </figcaption>
+                    </div>
+                  </figure>
+                </Reveal>
+              ))}
+            </ul>
+          )}
+
+          {extraCandles === null && (
+            <Reveal delay={120}>
+              <div className="mt-10 text-center">
+                <button
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  className="shine rounded-full border border-sage-text/30 px-8 py-3 font-semibold text-sage-text transition-all hover:-translate-y-0.5 hover:border-blush-deep hover:text-blush-deep disabled:opacity-50"
+                >
+                  {loadingMore ? "Loading…" : "See all candles"}
+                </button>
+              </div>
+            </Reveal>
+          )}
 
           <Reveal delay={120}>
             <p className="mt-10 text-center text-sage-text/70">
