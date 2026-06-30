@@ -91,24 +91,41 @@ create table if not exists public.candles (
 );
 create index if not exists candles_sort_idx on public.candles (sort_order, created_at);
 
+-- ---------------------------------------------------------------------------
+--  subscribers — opt-in email list (deduped across contact form + QR gate)
+-- ---------------------------------------------------------------------------
+create table if not exists public.subscribers (
+  id               uuid primary key default gen_random_uuid(),
+  created_at       timestamptz not null default now(),
+  email            text not null unique,
+  name             text,
+  source           text,
+  welcomed_at      timestamptz,
+  unsubscribed_at  timestamptz,
+  unsubscribe_token uuid not null default gen_random_uuid()
+);
+create index if not exists subscribers_email_idx on public.subscribers (email);
+
 -- ============================================================================
 --  Row Level Security
 --  Public writes (form submit, scan logging) run server-side with the SERVICE
 --  ROLE key, which bypasses RLS — so we only grant access to admins here.
 -- ============================================================================
-alter table public.admins      enable row level security;
-alter table public.submissions enable row level security;
-alter table public.qr_codes    enable row level security;
-alter table public.qr_scans    enable row level security;
-alter table public.candles     enable row level security;
+alter table public.admins       enable row level security;
+alter table public.submissions  enable row level security;
+alter table public.qr_codes     enable row level security;
+alter table public.qr_scans     enable row level security;
+alter table public.candles      enable row level security;
+alter table public.subscribers  enable row level security;
 
-drop policy if exists "admins read"            on public.admins;
-drop policy if exists "submissions admin read" on public.submissions;
-drop policy if exists "submissions admin write" on public.submissions;
-drop policy if exists "qr_codes admin all"     on public.qr_codes;
-drop policy if exists "qr_scans admin read"    on public.qr_scans;
-drop policy if exists "candles public read"    on public.candles;
-drop policy if exists "candles admin all"      on public.candles;
+drop policy if exists "admins read"              on public.admins;
+drop policy if exists "submissions admin read"   on public.submissions;
+drop policy if exists "submissions admin write"  on public.submissions;
+drop policy if exists "qr_codes admin all"       on public.qr_codes;
+drop policy if exists "qr_scans admin read"      on public.qr_scans;
+drop policy if exists "candles public read"      on public.candles;
+drop policy if exists "candles admin all"        on public.candles;
+drop policy if exists "subscribers admin all"    on public.subscribers;
 
 create policy "admins read" on public.admins
   for select to authenticated using (public.is_admin());
@@ -130,6 +147,9 @@ create policy "candles public read" on public.candles
   for select using (is_published = true);
 
 create policy "candles admin all" on public.candles
+  for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
+create policy "subscribers admin all" on public.subscribers
   for all to authenticated using (public.is_admin()) with check (public.is_admin());
 
 -- ============================================================================

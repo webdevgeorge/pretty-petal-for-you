@@ -12,17 +12,23 @@ function parseForm(formData: FormData) {
     image_url: String(formData.get("image_url") ?? "").trim(),
     link_url: String(formData.get("link_url") ?? "").trim() || null,
     sort_order: Number(formData.get("sort_order") ?? 0),
+    notify: formData.get("notify") === "on",
   };
 }
 
 export async function createCandle(formData: FormData) {
-  const fields = parseForm(formData);
+  const { notify, ...fields } = parseForm(formData);
   if (!fields.name || !fields.image_url) return { error: "Name and image are required" };
 
   const supabase = await createClient();
-  await supabase.from("candles").insert(fields);
+  const { data: candle } = await supabase.from("candles").insert(fields).select().single();
   revalidatePath("/admin/candles");
   revalidatePath("/");
+
+  if (notify && candle) {
+    const { broadcastNewCandle } = await import("@/lib/actions/subscribers");
+    broadcastNewCandle(candle).catch(() => {});
+  }
 }
 
 export async function updateCandle(id: string, formData: FormData) {

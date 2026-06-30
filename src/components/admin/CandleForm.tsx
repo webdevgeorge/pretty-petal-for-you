@@ -161,6 +161,19 @@ export function CandleForm({ candle }: { candle?: CandleFormValues }) {
         </label>
       </div>
 
+      {!isEdit && (
+        <label className="mt-4 flex cursor-pointer items-center gap-3">
+          <input
+            type="checkbox"
+            name="notify"
+            className="h-4 w-4 rounded border-line accent-blush-deep"
+          />
+          <span className="text-sm font-medium text-sage-text/70">
+            Notify subscribers about this candle
+          </span>
+        </label>
+      )}
+
       {preview && (
         <div className="mt-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -2,6 +2,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isServiceConfigured } from "@/lib/supabase/config";
+import { welcomeSubscriber, notifyOwnerOfLead } from "@/lib/actions/subscribers";
 
 export type ContactError = "fields" | "email" | "server" | "config";
 export type ContactResult = { ok: boolean; error?: ContactError };
@@ -34,6 +35,8 @@ export async function submitContact(
       note: note || null,
     });
     if (error) return { ok: false, error: "server" };
+    welcomeSubscriber(email, name, "contact_form").catch(() => {});
+    notifyOwnerOfLead({ source: "contact_form", email, name, phone, message: note || null }).catch(() => {});
     return { ok: true };
   } catch {
     return { ok: false, error: "server" };

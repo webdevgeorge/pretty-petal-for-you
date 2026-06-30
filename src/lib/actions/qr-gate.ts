@@ -65,5 +65,11 @@ export async function captureQrEmail(slug: string, formData: FormData) {
     // never block the redirect on logging failures
   }
 
+  if (email) {
+    const { welcomeSubscriber, notifyOwnerOfLead } = await import("@/lib/actions/subscribers");
+    welcomeSubscriber(email, null, "qr_gate").catch(() => {});
+    notifyOwnerOfLead({ source: "qr_gate", email, qrSlug: slug }).catch(() => {});
+  }
+
   redirect(buildTarget(qr.destination_url, slug));
 }
