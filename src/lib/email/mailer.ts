@@ -25,6 +25,6 @@ export async function sendEmail({
 }): Promise<SendResult> {
   if (!isEmailConfigured()) return { ok: false, skipped: true };
   const from = "Liza · Pretty Petal <Liza@prettypetal.shop>";
-  await getResend().emails.send({ from, to, subject, html });
+  await getResend().emails.send({ from, to, subject, html, reply_to: "prpetal777@gmail.com" });
   return { ok: true };
 }
